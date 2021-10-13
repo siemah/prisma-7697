@@ -1,0 +1,41 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+model Post {
+  id                Int        @id @default(autoincrement())
+  title             String
+  content           String?
+  published         Boolean?   @default(true)
+  publisher         String?
+  publisher_favicon String?
+  source_article_id String?    @unique
+  link              String?
+  image_link        String? /// image source url from CDN
+  main_image_link   String? /// the original image url from main source
+  language          Language?  @default(en)
+  numbre_of_reads   Int        @default(0)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @default(now()) @updatedAt
+  Category          Category[]
+  categoryId        Int?
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String?
+  posts     Post[]
+}
+
+enum Language {
+  en
+}
